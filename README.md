@@ -33,7 +33,6 @@ The `token` module is used to issue/sign a JWT token using a private key and the
 ### Example usage
 
 ```typescript
-import * as readline from "readline";
 import * as keys from "keychain/keys";
 import * as token from "keychain/token";
 
