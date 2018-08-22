@@ -1,4 +1,5 @@
 import * as jwt from "jsonwebtoken";
+import * as jwk from "./jwk";
 import * as keys from "./keys";
 
 export type Token =
@@ -13,7 +14,7 @@ export const ttl =
     60 * 60 * 24 * 365;
 
 export const verify = (token: Token) =>
-  (publicKeys: keys.PublicKey | keys.KeySet<keys.PublicKey>):
+  (publicKeys: jwk.PublicKey | keys.KeySet<jwk.PublicKey>):
     Promise<Payload> => {
   const data: any = jwt.decode(token, { complete: true });
   if (data && data.header && data.header.kid) {
@@ -36,7 +37,7 @@ export const verify = (token: Token) =>
 export const issue = (
   payload: Payload,
   options?: jwt.SignOptions
-) => (privateKey: keys.PrivateKey): Promise<Token> => {
+) => (privateKey: jwk.PrivateKey): Promise<Token> => {
   const opt = options || {};
   if ((payload as any).exp === undefined && opt.expiresIn === undefined) {
     opt.expiresIn = ttl;

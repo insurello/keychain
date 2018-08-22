@@ -1,7 +1,7 @@
-import * as jwk2pem from "jwk-to-pem";
+import * as jwk from "./jwk";
 
-export type PrivateKey = jwk2pem.JwkECPrivate | jwk2pem.JwkRSAPrivate;
-export type PublicKey = jwk2pem.JwkECPublic | jwk2pem.JwkRSAPublic;
+const jwk2pem = require("jwk-to-pem");
+
 export interface KeySet<T extends KeySetEntry> { keys: T[] }
 export interface KeySetEntry { kid?: string }
 
@@ -28,25 +28,23 @@ export const selectKey = (kid: string) =>
     }
 };
 
-export const key2pem = jwk2pem;
+export const key2pem = (
+  payload: jwk.PrivateKey | jwk.PublicKey,
+  options?: { private: boolean }
+): string =>
+  jwk2pem(payload, options);
 
-export const private2public = (privKey: PrivateKey): PublicKey => {
-  if (isElliptic(privKey)) {
+export const private2public = (privKey: jwk.PrivateKey): jwk.PublicKey => {
+  if (jwk.isElliptic(privKey)) {
     const { d, ...publicKey } = privKey;
     return publicKey;
-  } else if (isRSA(privKey)) {
+  } else if (jwk.isRSA(privKey)) {
     const { d, p, q, dp, dq, qi, ...publicKey } = privKey;
     return publicKey;
   } else {
     return assertNever(privKey);
   }
 };
-
-const isElliptic = (key: PrivateKey): key is jwk2pem.JwkECPrivate =>
-  key.kty === "EC";
-
-const isRSA = (key: PrivateKey): key is jwk2pem.JwkRSAPrivate =>
-  key.kty === "RSA";
 
 const assertNever = (x: never): never => {
   throw new Error("Unexpected object: " + x);

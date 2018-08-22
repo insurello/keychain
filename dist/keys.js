@@ -9,6 +9,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jwk = require("./jwk");
 const jwk2pem = require("jwk-to-pem");
 const isKeySet = (key) => key.keys !== undefined;
 exports.selectKey = (kid) => (keyOrSet) => {
@@ -30,13 +31,13 @@ exports.selectKey = (kid) => (keyOrSet) => {
         }
     }
 };
-exports.key2pem = jwk2pem;
+exports.key2pem = (payload, options) => jwk2pem(payload, options);
 exports.private2public = (privKey) => {
-    if (isElliptic(privKey)) {
+    if (jwk.isElliptic(privKey)) {
         const { d } = privKey, publicKey = __rest(privKey, ["d"]);
         return publicKey;
     }
-    else if (isRSA(privKey)) {
+    else if (jwk.isRSA(privKey)) {
         const { d, p, q, dp, dq, qi } = privKey, publicKey = __rest(privKey, ["d", "p", "q", "dp", "dq", "qi"]);
         return publicKey;
     }
@@ -44,8 +45,6 @@ exports.private2public = (privKey) => {
         return assertNever(privKey);
     }
 };
-const isElliptic = (key) => key.kty === "EC";
-const isRSA = (key) => key.kty === "RSA";
 const assertNever = (x) => {
     throw new Error("Unexpected object: " + x);
 };

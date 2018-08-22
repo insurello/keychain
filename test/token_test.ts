@@ -1,13 +1,13 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as jwt from "jsonwebtoken";
-import * as keys from "../src/keys";
+import * as jwk from "../src/jwk";
 import * as token from "../src/token";
 
 chai.should();
 chai.use(chaiAsPromised);
 
-const privateKey: keys.PrivateKey = {
+const privateKey: jwk.PrivateKey = {
   kty: "EC",
   d: "1IAwte8KIwBY3Re5aRmv6y5HvExaWgar786sPDrDI4M",
   use: "sig",
@@ -18,7 +18,7 @@ const privateKey: keys.PrivateKey = {
   alg: "ES256"
 };
 
-const publicKey: keys.PublicKey = {
+const publicKey: jwk.PublicKey = {
   kty: "EC",
   use: "sig",
   crv: "P-256",
@@ -44,13 +44,13 @@ describe("Token", () => {
 
     describe("with a public key", () => {
       it("should be rejected with an error", () => {
-        accessToken(publicKey as keys.PrivateKey).should.be.rejectedWith(Error);
+        accessToken(publicKey as jwk.PrivateKey).should.be.rejectedWith(Error);
       });
     });
 
     describe("with an invalid private key", () => {
       it("should be rejected with an error", () => {
-        accessToken({} as keys.PrivateKey).should.be.rejectedWith(Error);
+        accessToken({} as jwk.PrivateKey).should.be.rejectedWith(Error);
       });
     });
 

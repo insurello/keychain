@@ -1,9 +1,10 @@
 import * as chai from "chai";
+import * as jwk from "../src/jwk";
 import * as keys from "../src/keys";
 
 chai.should();
 
-const key: keys.PrivateKey = {
+const key: jwk.PrivateKey = {
   kty: "EC",
   d: "1IAwte8KIwBY3Re5aRmv6y5HvExaWgar786sPDrDI4M",
   use: "sig",
@@ -14,7 +15,7 @@ const key: keys.PrivateKey = {
   alg: "ES256"
 };
 
-const rsaKey: keys.PrivateKey = {
+const rsaKey: jwk.PrivateKey = {
   kty: "RSA",
   d: "Dz3oyaVnoM8TbJGrAkq87ldmg62gHVOV79NApMmOZpM1wswqUXwx77RrdNjPA31" +
      "EsEiO5DS5RCTvlMDjuT_m7LNa7vR-XS5GG0hUIAKBZN2NVtfvW_b-CldugqRIkH" +
