@@ -5,7 +5,7 @@ const keys = require("./keys");
 exports.ttl = process.env.TOKEN_TTL ?
     parseInt(process.env.TOKEN_TTL, 10) :
     60 * 60 * 24 * 365;
-exports.verify = (token, publicKeys) => {
+exports.verify = (token) => (publicKeys) => {
     const data = jwt.decode(token, { complete: true });
     if (data && data.header && data.header.kid) {
         const key = keys.selectKey(data.header.kid)(publicKeys);
@@ -24,7 +24,7 @@ exports.verify = (token, publicKeys) => {
         return Promise.reject(new Error("missing key id in payload"));
     }
 };
-exports.issue = (payload, privateKey, options) => {
+exports.issue = (payload, options) => (privateKey) => {
     const opt = options || {};
     if (payload.exp === undefined && opt.expiresIn === undefined) {
         opt.expiresIn = exports.ttl;

@@ -12,10 +12,9 @@ export const ttl =
     parseInt(process.env.TOKEN_TTL, 10) :
     60 * 60 * 24 * 365;
 
-export const verify = (
-  token: Token,
-  publicKeys: keys.PublicKey | keys.KeySet<keys.PublicKey>
-): Promise<Payload> => {
+export const verify = (token: Token) =>
+  (publicKeys: keys.PublicKey | keys.KeySet<keys.PublicKey>):
+    Promise<Payload> => {
   const data: any = jwt.decode(token, { complete: true });
   if (data && data.header && data.header.kid) {
     const key = keys.selectKey(data.header.kid)(publicKeys);
@@ -36,9 +35,8 @@ export const verify = (
 
 export const issue = (
   payload: Payload,
-  privateKey: keys.PrivateKey,
   options?: jwt.SignOptions
-): Promise<Token> => {
+) => (privateKey: keys.PrivateKey): Promise<Token> => {
   const opt = options || {};
   if ((payload as any).exp === undefined && opt.expiresIn === undefined) {
     opt.expiresIn = ttl;
