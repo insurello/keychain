@@ -32,7 +32,15 @@
     "jwk-to-pem": "^2.0.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/chai-as-promised": "^7.1.0",
     "@types/jsonwebtoken": "^7.2.8",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.2.0",
+    "source-map-support": "^0.5.9",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-insurello": "git+https://github.com/insurello/tslint-insurello.git",
     "typescript": "^3.0.1"

@@ -2,12 +2,12 @@ declare module "jwk-to-pem" {
   export = jwkToPem;
 
   function jwkToPem(
-      payload:
-        jwkToPem.JwkECPublic |
-        jwkToPem.JwkECPrivate |
-        jwkToPem.JwkRSAPublic |
-        jwkToPem.JwkRSAPrivate,
-      options?: jwkToPem.Options
+    payload:
+      jwkToPem.JwkECPublic |
+      jwkToPem.JwkECPrivate |
+      jwkToPem.JwkRSAPublic |
+      jwkToPem.JwkRSAPrivate,
+    options?: jwkToPem.Options
   ): string;
 
   namespace jwkToPem { // tslint:disable-line
@@ -51,7 +51,7 @@ declare module "jwk-to-pem" {
     }
 
     export interface Options {
-        private: boolean;
+      private: boolean;
     }
 
   }

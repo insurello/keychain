@@ -1,5 +1,5 @@
-/// <reference path="../src/jwk-to-pem.d.ts" />
 /// <reference types="node" />
+/// <reference types="jwk-to-pem" />
 import * as jwt from "jsonwebtoken";
 import * as keys from "./keys";
 export declare type Token = string;

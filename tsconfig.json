@@ -24,6 +24,10 @@
         "lib": [
           "es2015",
           "es2015.promise"
+        ],
+        "typeRoots": [
+          "./typings",
+          "./node_modules/@types"
         ]
     },
     "include": [
