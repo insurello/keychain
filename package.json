@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Manage JWK key sets and issue/verify JWT tokens using public key signatures.",
   "main": "./dist/index.js",
-  "types": [
-    "./dist/index.d.ts",
-    "./typings/jwk-to-pem/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/*.js",
+    "dist/*.d.ts",
+    "typings/**/*.d.ts"
   ],
   "scripts": {
     "test": "make test",
