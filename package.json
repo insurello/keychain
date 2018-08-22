@@ -23,7 +23,10 @@
     "jwk",
     "pki"
   ],
-  "author": "Niklas Holmgren",
+  "author": {
+    "name": "Niklas Holmgren",
+    "email": "niklas@insurello.se"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/insurello/keychain/issues"
