@@ -62,4 +62,4 @@ fetchKeys()
   .catch(console.error);
 ```
 
-Note that when verifying a token using a key set the correct key is selected automatically if possible (using the `kid` claim in the token header).
+Note that when verifying a token using a key set the correct key is selected automatically from the set if possible (using the `kid` claim in the token header). You can also use `token.verify()` with a specific key instead of a key set if you already know which key to use.
