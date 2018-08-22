@@ -1,0 +1,40 @@
+{
+  "name": "keychain",
+  "version": "1.0.0",
+  "description": "Manage JWK key sets and issue/verify JWT tokens using public key signatures.",
+  "main": "index.js",
+  "files": [
+    "./dist/*"
+  ],
+  "types": "./dist/*.d.ts",
+  "scripts": {
+    "test": "make test",
+    "compile": "make",
+    "lint": "make lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/insurello/keychain.git"
+  },
+  "keywords": [
+    "jwt",
+    "jwk",
+    "pki"
+  ],
+  "author": "Niklas Holmgren",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/insurello/keychain/issues"
+  },
+  "homepage": "https://github.com/insurello/keychain#readme",
+  "dependencies": {
+    "jsonwebtoken": "^8.3.0",
+    "jwk-to-pem": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^7.2.8",
+    "tslint": "^5.11.0",
+    "tslint-insurello": "git+https://github.com/insurello/tslint-insurello.git",
+    "typescript": "^3.0.1"
+  }
+}
