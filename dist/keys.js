@@ -1,17 +1,19 @@
 "use strict";
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
-            t[p[i]] = s[p[i]];
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwk = require("./jwk");
-const jwk2pem = require("jwk-to-pem");
-const isKeySet = (key) => key.keys !== undefined;
+exports.decode = (data) => {
+    if (data && data instanceof Object &&
+        data.keys && data.keys instanceof Array) {
+        const keys = data.keys
+            .filter(jwk.isKey)
+            .map(jwk.decode)
+            .reduce((set, key) => set.add(key), new Set());
+        return { keys: Array.from(keys) };
+    }
+    else {
+        throw new Error("is not a valid JWK key set");
+    }
+};
 exports.selectKey = (kid) => (keyOrSet) => {
     if (isKeySet(keyOrSet)) {
         const keys = keyOrSet.keys.filter((key) => key.kid === kid);
@@ -31,20 +33,4 @@ exports.selectKey = (kid) => (keyOrSet) => {
         }
     }
 };
-exports.key2pem = (payload, options) => jwk2pem(payload, options);
-exports.private2public = (privKey) => {
-    if (jwk.isElliptic(privKey)) {
-        const { d } = privKey, publicKey = __rest(privKey, ["d"]);
-        return publicKey;
-    }
-    else if (jwk.isRSA(privKey)) {
-        const { d, p, q, dp, dq, qi } = privKey, publicKey = __rest(privKey, ["d", "p", "q", "dp", "dq", "qi"]);
-        return publicKey;
-    }
-    else {
-        return assertNever(privKey);
-    }
-};
-const assertNever = (x) => {
-    throw new Error("Unexpected object: " + x);
-};
+const isKeySet = (key) => key.keys !== undefined;

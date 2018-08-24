@@ -41,6 +41,34 @@ const rsaKey: jwk.PrivateKey = {
 };
 
 describe("Keys", () => {
+  describe("decode()", () => {
+    describe("a valid key set", () => {
+      it("should return the validated key", () => {
+        keys.decode({ keys: [ key ]}).should.deep.equal({ keys: [ key ]});
+      });
+    });
+
+    describe("an invalid key set", () => {
+      it("should throw an error", () => {
+        chai.should().throw(() => {
+          keys.decode({});
+        }, Error);
+      });
+    });
+
+    describe("a valid key set with invalid keys", () => {
+      it("should ignore the invalid keys", () => {
+        keys.decode({ keys: [ key, {} ]}).should.deep.equal({ keys: [ key ]});
+      });
+    });
+
+    describe("a valid key set with duplicate keys", () => {
+      it("should return only unique keys", () => {
+        keys.decode({ keys: [ key, key ]}).should.deep.equal({ keys: [ key ]});
+      });
+    });
+  });
+
   describe("selectKey()", () => {
     describe("with a key set", () => {
       it("should return the key with the specified key id", () => {
@@ -65,54 +93,6 @@ describe("Keys", () => {
           keys.selectKey("wrong")(key);
         }, Error);
       });
-    });
-  });
-
-  describe("private2public()", () => {
-    describe("with an elliptic key", () => {
-      it("should remove the 'd' property", () => {
-        keys.private2public(key).should.deep.equal({
-          kty: "EC",
-          use: "sig",
-          crv: "P-256",
-          kid: "test-1",
-          x: "DPZRwPVoaxa5DkaH8He6YMKShjmZSJU2Q1cD6cxSVUA",
-          y: "MVPseGR36U1twTbbC1NjyauRQHSJLnUYLtO6MmPcpck",
-          alg: "ES256"
-        });
-      });
-    });
-
-    describe("with an RSA key", () => {
-      it("should remove the 'd', 'p', 'q', 'dp', 'dq', 'qi' properties", () => {
-        keys.private2public(rsaKey).should.deep.equal({
-          kty: "RSA",
-          e: "AQAB",
-          use: "enc",
-          kid: "test-2",
-          alg: "RS384",
-          n: "qm6uyDsb64B4A14FgHKUHhC4-2t73sqMiCeBgjbpguM7ApLlYm4hzYXs7JMacEQ" +
-             "ldOUDqKBG-M1G9s3r6fg7mpcy_IY89gaFSZ4L-5KD-BeCDF99e-5xAtDodeEg1h" +
-             "zDHb3P1DATXqJdS3Re0G4nWNyukBFkYd1DvDP5W7OkO5cKJACE1oIHpBO6CRja_" +
-             "6WDIY68k9GZ1Hy_-BWo56yPivNDMlC1Nm9rsczupfomW95Ne1LxVAiXFK0lGldz" +
-             "SsMRYo2cTtaTCoJVd9Z1R9YLwymCUIaVq-U7oRJYFPWQgX5k4bWSQNSi48OoX_x" +
-             "5QwLt7PdTchJjXd3SoSew7HKy6w"
-        });
-      });
-    });
-  });
-
-  describe("key2pem()", () => {
-    it("should convert the JWK key to PEM format", () => {
-      keys.key2pem(key).should.be.a("string");
-    });
-
-    it("should convert a public key", () => {
-      keys.key2pem(key).should.match(/PUBLIC KEY/);
-    });
-
-    it("should convert a private key", () => {
-      keys.key2pem(key, { private: true }).should.match(/PRIVATE KEY/);
     });
   });
 });

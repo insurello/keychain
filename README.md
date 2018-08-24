@@ -2,6 +2,10 @@
 
 Manage JWK key sets and issue/verify JWT tokens using public key signatures.
 
+## JWK keys
+
+The `jwk` module has data structures and helper functions to handle JWK keys.
+
 ## Key sets
 
 The `keys` module helps you to manage sets of JWK keys (public/private keys pairs).
@@ -9,17 +13,19 @@ The `keys` module helps you to manage sets of JWK keys (public/private keys pair
 ### Example usage
 
 ```typescript
-import * as keys from "keychain/keys";
+import { jwk, keys } from "keychain";
 
 // SELECT AND CONVERT KEYS
 // 1. Fetch a key set from somewhere.
-// 2. Select a key with ID "abc123".
-// 3. Convert the key from private to public.
-// 3. Convert the key to PEM format.
+// 2. Decode the key set.
+// 3. Select a key with ID "abc123".
+// 4. Convert the key from private to public.
+// 5. Convert the key to PEM format.
 fetchKeys()
+  .then(keys.decode)
   .then(keys.selectKey("abc123"))
-  .then(keys.private2public)
-  .then(keys.key2pem)
+  .then(jwk.private2public)
+  .then(jwk.key2pem)
   .then((key) => {
     // ...do something with the key
   })
@@ -33,8 +39,7 @@ The `token` module is used to issue/sign a JWT token using a private key and the
 ### Example usage
 
 ```typescript
-import * as keys from "keychain/keys";
-import * as token from "keychain/token";
+import { keys, token } from "keychain";
 
 const payload = {
   hello: "world"

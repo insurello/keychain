@@ -20,7 +20,7 @@ export const verify = (token: Token) =>
   if (data && data.header && data.header.kid) {
     return new Promise<Payload>((resolve, reject) => {
       const key = keys.selectKey(data.header.kid)(publicKeys);
-      jwt.verify(token, keys.key2pem(key),
+      jwt.verify(token, jwk.key2pem(key),
         (err: Error, payload: any) => {
           if (err) {
             reject(err);
@@ -45,7 +45,7 @@ export const issue = (
   opt.keyid = privateKey.kid;
   opt.algorithm = privateKey.alg;
   return new Promise<Token>((resolve, reject) => {
-    jwt.sign(payload, keys.key2pem(privateKey, { private: true }), opt,
+    jwt.sign(payload, jwk.key2pem(privateKey, { private: true }), opt,
       (err: Error, encoded: string) => {
         if (err) {
           reject(err);

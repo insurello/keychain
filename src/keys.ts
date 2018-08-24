@@ -1,14 +1,21 @@
 import * as jwk from "./jwk";
 
-const jwk2pem = require("jwk-to-pem");
-
 export interface KeySet<T extends KeySetEntry> { keys: T[] }
 export interface KeySetEntry { kid?: string }
 
-const isKeySet = <T extends KeySetEntry>(
-  key: T | KeySet<T>
-): key is KeySet<T> =>
-    (key as KeySet<T>).keys !== undefined;
+export const decode = (data: any): KeySet<jwk.Key> => {
+  if (data && data instanceof Object &&
+      data.keys && data.keys instanceof Array) {
+    const keys: Set<jwk.Key> = data.keys
+      .filter(jwk.isKey)
+      .map(jwk.decode)
+      .reduce((set: Set<jwk.Key>, key: jwk.Key) =>
+        set.add(key), new Set());
+    return { keys: Array.from(keys) };
+  } else {
+    throw new Error("is not a valid JWK key set");
+  }
+};
 
 export const selectKey = (kid: string) =>
   <T extends KeySetEntry>(keyOrSet: T | KeySet<T>): T => {
@@ -28,24 +35,7 @@ export const selectKey = (kid: string) =>
     }
 };
 
-export const key2pem = (
-  payload: jwk.PrivateKey | jwk.PublicKey,
-  options?: { private: boolean }
-): string =>
-  jwk2pem(payload, options);
-
-export const private2public = (privKey: jwk.PrivateKey): jwk.PublicKey => {
-  if (jwk.isElliptic(privKey)) {
-    const { d, ...publicKey } = privKey;
-    return publicKey;
-  } else if (jwk.isRSA(privKey)) {
-    const { d, p, q, dp, dq, qi, ...publicKey } = privKey;
-    return publicKey;
-  } else {
-    return assertNever(privKey);
-  }
-};
-
-const assertNever = (x: never): never => {
-  throw new Error("Unexpected object: " + x);
-};
+const isKeySet = <T extends KeySetEntry>(
+  key: T | KeySet<T>
+): key is KeySet<T> =>
+    (key as KeySet<T>).keys !== undefined;

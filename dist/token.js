@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("jsonwebtoken");
+const jwk = require("./jwk");
 const keys = require("./keys");
 exports.ttl = process.env.TOKEN_TTL ?
     parseInt(process.env.TOKEN_TTL, 10) :
@@ -10,7 +11,7 @@ exports.verify = (token) => (publicKeys) => {
     if (data && data.header && data.header.kid) {
         return new Promise((resolve, reject) => {
             const key = keys.selectKey(data.header.kid)(publicKeys);
-            jwt.verify(token, keys.key2pem(key), (err, payload) => {
+            jwt.verify(token, jwk.key2pem(key), (err, payload) => {
                 if (err) {
                     reject(err);
                 }
@@ -32,7 +33,7 @@ exports.issue = (payload, options) => (privateKey) => {
     opt.keyid = privateKey.kid;
     opt.algorithm = privateKey.alg;
     return new Promise((resolve, reject) => {
-        jwt.sign(payload, keys.key2pem(privateKey, { private: true }), opt, (err, encoded) => {
+        jwt.sign(payload, jwk.key2pem(privateKey, { private: true }), opt, (err, encoded) => {
             if (err) {
                 reject(err);
             }
