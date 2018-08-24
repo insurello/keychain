@@ -88,38 +88,62 @@ describe("Token", () => {
 
   describe("verify()", () => {
 
-    it("should make sure the token has not been tampered with", () => {
-      return token.issue({}, {
+    describe("the token is valid and we have the key used to sign it", () => {
+      const accessToken = token.issue({ hello: "world" }, {
         issuer: "test",
         subject: "42"
-      })(privateKey).then((accessToken) => {
-        return token
-          .verify(accessToken)(publicKey)
-          .then((payload: any) => {
-            payload.should.be.a("object");
-            payload.sub.should.equal("42");
+      })(privateKey);
+
+      it("should eventually resolve with an object", () =>
+        accessToken.then((t) =>
+          token.verify(t)(publicKey).should.eventually.be.a("object")));
+
+      it("should eventually resolve with expiration date", () =>
+        accessToken.then((t) =>
+          token.verify(t)(publicKey).should.eventually.have.property("exp")));
+
+      it("should eventually resolve with issued date", () =>
+        accessToken.then((t) =>
+          token.verify(t)(publicKey).should.eventually.have.property("iat")));
+
+      it("should eventually resolve with the token payload", () =>
+        accessToken.then((t) =>
+          token.verify(t)(publicKey).should.eventually.include({
+            hello: "world"
+          })));
+
+      it("should eventually resolve with the token options", () =>
+        accessToken.then((t) =>
+          token.verify(t)(publicKey).should.eventually.include({
+            iss: "test",
+            sub: "42"
+          })));
+    });
+
+    describe("the token signature is invalid", () => {
+      it("should be rejected with an error", () => {
+        return token.verify("wrong")(publicKey).should.be.rejectedWith(Error);
+      });
+    });
+
+    describe("the token has expired", () => {
+      it("should be rejected with an error", () => {
+        return token.issue({}, { expiresIn: "-1 day" })(privateKey)
+          .then((accessToken) => {
+            return token.verify(accessToken)(publicKey)
+              .should.be.rejectedWith(Error);
           });
       });
     });
 
-    it("should fail if the token signature is invalid", () => {
-      return token.verify("wrong")(publicKey).should.be.rejectedWith(Error);
-    });
-
-    it("should fail if the token has expired", () => {
-      return token.issue({}, { expiresIn: "-1 day" })(privateKey)
-        .then((accessToken) => {
-          return token.verify(accessToken)(publicKey)
-            .should.be.rejectedWith(Error);
-        });
-    });
-
-    it("should fail if the token is not yet valid", () => {
-      return token.issue({}, { notBefore: "1 day" })(privateKey)
-        .then((accessToken) => {
-          return token.verify(accessToken)(publicKey)
-            .should.be.rejectedWith(Error);
-        });
+    describe("the token is not yet valid", () => {
+      it("should be rejected with an error", () => {
+        return token.issue({}, { notBefore: "1 day" })(privateKey)
+          .then((accessToken) => {
+            return token.verify(accessToken)(publicKey)
+              .should.be.rejectedWith(Error);
+          });
+      });
     });
 
     describe("there is no matching public key", () => {
