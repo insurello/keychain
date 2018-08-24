@@ -1,6 +1,17 @@
 import * as _jwk from "./jwk";
 import * as _keys from "./keys";
 import * as _token from "./token";
+export declare type Key = _jwk.Key;
+export declare type PrivateKey = _jwk.PrivateKey;
+export declare type PublicKey = _jwk.PublicKey;
+export declare type ECPublic = _jwk.ECPublic;
+export declare type ECPrivate = _jwk.ECPrivate;
+export declare type RSAPublic = _jwk.RSAPublic;
+export declare type RSAPrivate = _jwk.RSAPrivate;
+export declare type KeySet<T> = _keys.KeySet<T>;
+export declare type KeySetEntry = _keys.KeySetEntry;
+export declare type Token = _token.Token;
+export declare type Payload = _token.Payload;
 export declare const jwk: typeof _jwk;
 export declare const keys: typeof _keys;
 export declare const token: typeof _token;
