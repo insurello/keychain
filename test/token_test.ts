@@ -122,6 +122,16 @@ describe("Token", () => {
         });
     });
 
+    describe("there is no matching public key", () => {
+      it("should be rejected with an error", () => {
+        return token.issue({})(privateKey)
+          .then((accessToken) => {
+            return token.verify(accessToken)({ keys: [] })
+              .should.be.rejectedWith(Error, /unknown key/i);
+          });
+      });
+    });
+
   });
 
 });

@@ -8,8 +8,8 @@ exports.ttl = process.env.TOKEN_TTL ?
 exports.verify = (token) => (publicKeys) => {
     const data = jwt.decode(token, { complete: true });
     if (data && data.header && data.header.kid) {
-        const key = keys.selectKey(data.header.kid)(publicKeys);
         return new Promise((resolve, reject) => {
+            const key = keys.selectKey(data.header.kid)(publicKeys);
             jwt.verify(token, keys.key2pem(key), (err, payload) => {
                 if (err) {
                     reject(err);

@@ -18,8 +18,8 @@ export const verify = (token: Token) =>
     Promise<Payload> => {
   const data: any = jwt.decode(token, { complete: true });
   if (data && data.header && data.header.kid) {
-    const key = keys.selectKey(data.header.kid)(publicKeys);
     return new Promise<Payload>((resolve, reject) => {
+      const key = keys.selectKey(data.header.kid)(publicKeys);
       jwt.verify(token, keys.key2pem(key),
         (err: Error, payload: any) => {
           if (err) {
