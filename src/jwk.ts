@@ -86,7 +86,7 @@ const JwkRSAKey = t.union([
   JwkRSAPrivate
 ]);
 
-const JwkKey = t.taggedUnion("kty", [
+const JwkKey = t.union([
   JwkECKey,
   JwkRSAKey
 ]);
@@ -116,7 +116,7 @@ export const isPrivate = (key: Key): key is PrivateKey =>
   JwkECPrivate.is(key) || JwkRSAPrivate.is(key);
 
 export const isPublic = (key: Key): key is PublicKey =>
-  t.exact(JwkECPublic).is(key) || t.exact(JwkECPublic).is(key);
+  !isPrivate(key) && (JwkECPublic.is(key) || JwkRSAPublic.is(key));
 
 export const isElliptic = (key: PrivateKey): key is ECPrivate =>
   key.kty === "EC";
