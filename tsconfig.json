@@ -1,32 +1,20 @@
 {
-    "compileOnSave": true,
-    "compilerOptions": {
-        "outDir": "dist",
-        "target": "es2015",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "noEmitOnError": true,
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "emitDecoratorMetadata": true,
-        "noImplicitAny": true,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "alwaysStrict": true,
-        "forceConsistentCasingInFileNames": true,
-        "strictNullChecks": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitThis": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "sourceMap": false,
-        "lib": [
-          "es2015",
-          "es2015.promise"
-        ]
-    },
-    "include": [
-        "./src/**/*"
-    ]
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "es2019", // Requires node 11 or newer
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["es2019"],
+    "noEmitOnError": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "strict": true, // noImplicitAny noImplicitThis alwaysStrict strictBindCallApply strictNullChecks strictFunctionTypes strictPropertyInitialization
+    "removeComments": true,
+    "sourceMap": false,
+    "noErrorTruncation": true
+  },
+  "include": ["src"]
 }

@@ -88,7 +88,7 @@ export declare const isPublic: (key: Key) => key is PublicKey;
 export declare const isElliptic: (key: PrivateKey) => key is ECPrivate;
 export declare const isRSA: (key: PrivateKey) => key is RSAPrivate;
 export declare const private2public: (privKey: PrivateKey) => PublicKey;
-export declare const key2pem: (payload: Key, options?: {
+export declare const key2pem: (payload: PrivateKey | PublicKey, options?: {
     private: boolean;
 } | undefined) => string;
 export {};

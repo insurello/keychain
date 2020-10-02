@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.issue = exports.verify = exports.ttl = void 0;
 const jwt = require("jsonwebtoken");
 const jwk = require("./jwk");
 const keys = require("./keys");
-exports.ttl = process.env.TOKEN_TTL ?
-    parseInt(process.env.TOKEN_TTL, 10) :
-    60 * 60 * 24 * 365;
+exports.ttl = process.env.TOKEN_TTL
+    ? parseInt(process.env.TOKEN_TTL, 10)
+    : 60 * 60 * 24 * 365;
 exports.verify = (token) => (publicKeys) => {
     const data = jwt.decode(token, { complete: true });
     if (data && data.header && data.header.kid) {

@@ -1,9 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.selectKey = exports.decode = void 0;
 const jwk = require("./jwk");
 exports.decode = (data) => {
-    if (data && data instanceof Object &&
-        data.keys && data.keys instanceof Array) {
+    if (data &&
+        data instanceof Object &&
+        data.keys &&
+        data.keys instanceof Array) {
         const keys = data.keys
             .filter(jwk.isKey)
             .map(jwk.decode)

@@ -42,7 +42,7 @@ The `token` module is used to issue/sign a JWT token using a private key and the
 import { keys, token } from "keychain";
 
 const payload = {
-  hello: "world"
+  hello: "world",
 };
 
 // ISSUE A TOKEN
@@ -60,10 +60,7 @@ fetchKeys()
 // 1. Fetch a key set from somewhere.
 // 2. Verify the token stored in `input` using correct key from key set.
 // 3. If successful, print the payload from the token to the console.
-fetchKeys()
-  .then(token.verify(input))
-  .then(console.log)
-  .catch(console.error);
+fetchKeys().then(token.verify(input)).then(console.log).catch(console.error);
 ```
 
 Note that when verifying a token using a key set the correct key is selected automatically from the set if possible (using the `kid` claim in the token header). You can also use `token.verify()` with a specific key instead of a key set if you already know which key to use.
