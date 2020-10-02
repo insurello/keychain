@@ -2,4 +2,4 @@
 tsconfig.json
 tslint.json
 /test/
-.circleci
+.github
