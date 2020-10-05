@@ -1,3 +1,5 @@
+/* tslint:disable no-namespace */
+
 import { Key } from "../../jwk";
 
 export = jwkToBuffer;
