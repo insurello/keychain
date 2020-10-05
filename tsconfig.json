@@ -14,7 +14,11 @@
     "strict": true, // noImplicitAny noImplicitThis alwaysStrict strictBindCallApply strictNullChecks strictFunctionTypes strictPropertyInitialization
     "removeComments": true,
     "sourceMap": false,
-    "noErrorTruncation": true
+    "noErrorTruncation": true,
+    "baseUrl": ".",
+    "paths": {
+      "jwk-to-pem": ["src/@types/jwk-to-pem"]
+    }
   },
   "include": ["src"]
 }

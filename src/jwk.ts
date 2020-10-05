@@ -1,8 +1,7 @@
 import * as E from "fp-ts/lib/Either";
 import * as t from "io-ts";
 import { PathReporter } from "io-ts/lib/PathReporter";
-
-const jwk2pem = require("jwk-to-pem");
+import * as jwk2pem from "jwk-to-pem";
 
 const JwkBase = t.partial({
   use: t.union([t.literal("sig"), t.literal("enc")]),
@@ -127,7 +126,7 @@ const assertNever = (x: never): never => {
   throw new Error("Unexpected object: " + x);
 };
 
-export const key2pem = (
+export const key2pem: (
   payload: PrivateKey | PublicKey,
   options?: { private: boolean }
-): string => jwk2pem(payload, options);
+) => string = jwk2pem;

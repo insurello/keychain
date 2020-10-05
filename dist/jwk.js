@@ -103,4 +103,4 @@ exports.private2public = (privKey) => {
 const assertNever = (x) => {
     throw new Error("Unexpected object: " + x);
 };
-exports.key2pem = (payload, options) => jwk2pem(payload, options);
+exports.key2pem = jwk2pem;
