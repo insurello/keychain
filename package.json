@@ -18,7 +18,9 @@
     "lint": "prettier --check . && tslint '{src,test}/**/*.ts' --format codeFrame",
     "test": "jest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jwk-to-pem": "^2.0.0"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.14",
     "@types/jsonwebtoken": "^8.5.0",
@@ -26,7 +28,6 @@
     "io-ts": "^2.2.10",
     "jest": "^26.4.2",
     "jsonwebtoken": "^8.3.0",
-    "jwk-to-pem": "^2.0.0",
     "prettier": "^2.1.2",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
@@ -37,7 +38,6 @@
   "peerDependencies": {
     "fp-ts": "2.x",
     "io-ts": "2.x",
-    "jsonwebtoken": "8.x",
-    "jwk-to-pem": "2.x"
+    "jsonwebtoken": "8.x"
   }
 }
