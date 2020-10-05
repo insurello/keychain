@@ -127,6 +127,6 @@ const assertNever = (x: never): never => {
 };
 
 export const key2pem: (
-  payload: PrivateKey | PublicKey,
+  payload: Key,
   options?: { private: boolean }
 ) => string = jwk2pem;
