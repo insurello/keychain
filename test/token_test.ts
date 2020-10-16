@@ -1,11 +1,6 @@
-import * as chai from "chai";
-import * as chaiAsPromised from "chai-as-promised";
 import * as jwt from "jsonwebtoken";
 import * as jwk from "../src/jwk";
 import * as token from "../src/token";
-
-chai.should();
-chai.use(chaiAsPromised);
 
 const privateKey: jwk.PrivateKey = {
   kty: "EC",
@@ -15,7 +10,7 @@ const privateKey: jwk.PrivateKey = {
   kid: "test",
   x: "DPZRwPVoaxa5DkaH8He6YMKShjmZSJU2Q1cD6cxSVUA",
   y: "MVPseGR36U1twTbbC1NjyauRQHSJLnUYLtO6MmPcpck",
-  alg: "ES256"
+  alg: "ES256",
 };
 
 const publicKey: jwk.PublicKey = {
@@ -25,11 +20,10 @@ const publicKey: jwk.PublicKey = {
   kid: "test",
   x: "DPZRwPVoaxa5DkaH8He6YMKShjmZSJU2Q1cD6cxSVUA",
   y: "MVPseGR36U1twTbbC1NjyauRQHSJLnUYLtO6MmPcpck",
-  alg: "ES256"
+  alg: "ES256",
 };
 
 describe("Token", () => {
-
   describe("issue()", () => {
     const accessToken = token.issue(
       { test: "test" },
@@ -38,19 +32,25 @@ describe("Token", () => {
 
     describe("with a private key", () => {
       it("should create a new token", () => {
-        accessToken(privateKey).should.eventually.be.a("string");
+        expect(accessToken(privateKey).then((t) => typeof t)).resolves.toBe(
+          "string"
+        );
       });
     });
 
     describe("with a public key", () => {
       it("should be rejected with an error", () => {
-        accessToken(publicKey as jwk.PrivateKey).should.be.rejectedWith(Error);
+        expect(accessToken(publicKey as jwk.PrivateKey)).rejects.toBeInstanceOf(
+          Error
+        );
       });
     });
 
     describe("with an invalid private key", () => {
       it("should be rejected with an error", () => {
-        accessToken({} as jwk.PrivateKey).should.be.rejectedWith(Error);
+        expect(
+          accessToken(({} as unknown) as jwk.PrivateKey)
+        ).rejects.toBeInstanceOf(Error);
       });
     });
 
@@ -58,104 +58,124 @@ describe("Token", () => {
       let payload: any;
 
       beforeEach(() =>
-        accessToken(privateKey).then((str) => jwt.decode(str))
-          .then((data) => payload = data)
+        accessToken(privateKey)
+          .then((str) => jwt.decode(str))
+          .then((data) => (payload = data))
       );
 
       it("should be an object", () => {
-        payload.should.be.a("object");
+        expect(typeof payload).toBe("object");
       });
 
       it("should include a subject", () => {
-        payload.sub.should.equal("42");
+        expect(payload.sub).toBe("42");
       });
 
       it("should include an issuer", () => {
-        payload.iss.should.equal("test");
+        expect(payload.iss).toBe("test");
       });
 
       it("should include an expiration time", () => {
-        payload.exp.should.be.a("number");
+        expect(typeof payload.exp).toBe("number");
       });
 
       it("should include custom payload items", () => {
-        payload.test.should.equal("test");
+        expect(payload.test).toBe("test");
       });
-
     });
-
   });
 
   describe("verify()", () => {
-
     describe("the token is valid and we have the key used to sign it", () => {
-      const accessToken = token.issue({ hello: "world" }, {
-        issuer: "test",
-        subject: "42"
-      })(privateKey);
+      const accessToken = token.issue(
+        { hello: "world" },
+        {
+          issuer: "test",
+          subject: "42",
+        }
+      )(privateKey);
 
       it("should eventually resolve with an object", () =>
         accessToken.then((t) =>
-          token.verify(t)(publicKey).should.eventually.be.a("object")));
+          expect(
+            token
+              .verify(t)(publicKey)
+              .then((t2) => typeof t2)
+          ).resolves.toBe("object")
+        ));
 
       it("should eventually resolve with expiration date", () =>
         accessToken.then((t) =>
-          token.verify(t)(publicKey).should.eventually.have.property("exp")));
+          expect(token.verify(t)(publicKey)).resolves.toHaveProperty("exp")
+        ));
 
       it("should eventually resolve with issued date", () =>
         accessToken.then((t) =>
-          token.verify(t)(publicKey).should.eventually.have.property("iat")));
+          expect(token.verify(t)(publicKey)).resolves.toHaveProperty("iat")
+        ));
 
       it("should eventually resolve with the token payload", () =>
         accessToken.then((t) =>
-          token.verify(t)(publicKey).should.eventually.include({
-            hello: "world"
-          })));
+          expect(token.verify(t)(publicKey)).resolves.toMatchObject({
+            hello: "world",
+          })
+        ));
 
       it("should eventually resolve with the token options", () =>
         accessToken.then((t) =>
-          token.verify(t)(publicKey).should.eventually.include({
+          expect(token.verify(t)(publicKey)).resolves.toMatchObject({
             iss: "test",
-            sub: "42"
-          })));
+            sub: "42",
+          })
+        ));
     });
 
     describe("the token signature is invalid", () => {
       it("should be rejected with an error", () => {
-        return token.verify("wrong")(publicKey).should.be.rejectedWith(Error);
+        return expect(token.verify("wrong")(publicKey)).rejects.toBeInstanceOf(
+          Error
+        );
       });
     });
 
     describe("the token has expired", () => {
       it("should be rejected with an error", () => {
-        return token.issue({}, { expiresIn: "-1 day" })(privateKey)
+        return token
+          .issue(
+            {},
+            { expiresIn: "-1 day" }
+          )(privateKey)
           .then((accessToken) => {
-            return token.verify(accessToken)(publicKey)
-              .should.be.rejectedWith(Error);
+            return expect(
+              token.verify(accessToken)(publicKey)
+            ).rejects.toBeInstanceOf(Error);
           });
       });
     });
 
     describe("the token is not yet valid", () => {
       it("should be rejected with an error", () => {
-        return token.issue({}, { notBefore: "1 day" })(privateKey)
+        return token
+          .issue(
+            {},
+            { notBefore: "1 day" }
+          )(privateKey)
           .then((accessToken) => {
-            return token.verify(accessToken)(publicKey)
-              .should.be.rejectedWith(Error);
+            return expect(
+              token.verify(accessToken)(publicKey)
+            ).rejects.toBeInstanceOf(Error);
           });
       });
     });
 
     describe("there is no matching public key", () => {
       it("should be rejected with an error", () => {
-        return token.issue({})(privateKey)
-          .then((accessToken) => {
-            return token.verify(accessToken)({ keys: [] })
-              .should.be.rejectedWith(Error, /unknown key/i);
-          });
+        return expect(
+          token
+            .issue({})(privateKey)
+            .then((accessToken) => token.verify(accessToken)({ keys: [] }))
+        ).rejects.toHaveProperty("message", "unknown key test");
       });
     });
-
   });
-
 });

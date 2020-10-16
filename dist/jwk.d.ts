@@ -90,5 +90,5 @@ export declare const isRSA: (key: PrivateKey) => key is RSAPrivate;
 export declare const private2public: (privKey: PrivateKey) => PublicKey;
 export declare const key2pem: (payload: Key, options?: {
     private: boolean;
-} | undefined) => string;
+}) => string;
 export {};
